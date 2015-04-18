@@ -24,7 +24,12 @@ class MiniTest::Unit::TestCase
       end
     }
 
-    result = ActiveSupport::Notifications.subscribed(counter_f, "sql.active_record", &block)
+    begin
+      subscribed = ActiveSupport::Notifications.subscribe("sql.active_record", &counter_f)
+      result = block.call
+    ensure
+      ActiveSupport::Notifications.unsubscribe subscribed
+    end
 
     [count, result]
   end
