@@ -59,7 +59,7 @@ In your view you could traverse the tree using
 <% end %>
 ```
 
-You also could use walk_tree as an instance method such as:
+You also could use walk\_tree as an instance method such as:
 
 ```erb
 <% Page.first.walk_tree do |page, level| %>
@@ -74,6 +74,9 @@ We no longer support Ruby 1.8 or versions of Rails/ActiveRecord older than 3.0. 
 Moving forward we will do our best to support the latest versions of ActiveRecord and Ruby.
 
 ## Change Log
+* 2.2.0 - June 15, 2015
+	* Added TreeWalker.walk\_tree instance method. See #32, #37, #38 -- felixbuenemann, genewoo
+	* Fix tests on rails 3.x. See #36 -- marshall-lee
 * 2.1.0 - September 25, 2014
 	* Added TreeWalker. See #30 -- 545ch4
 * 2.0.0 - July 3, 2014
