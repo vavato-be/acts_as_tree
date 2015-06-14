@@ -185,30 +185,39 @@ module ActsAsTree
     #   <%= link_to "#{' '*level}#{page.name}", page_path(page) %><br />
     # <% end %>
     #
-    def walk_tree(_options = {}, level = 0, node = nil, &block)
-      options = {:algorithm => :dfs, :where => {}}.update(_options)
-      case options[:algorithm]
-      when :bfs
-        nodes = (node.nil? ? roots : node.children).where(options[:where])
-        nodes.each do |child|
-          block.call child, level
-        end
-        nodes.each do |child|
-          walk_tree options, level + 1, child, &block
-        end
-      else
-        if node.nil?
-          roots.where(options[:where]).each do |root_node|
-            walk_tree options, level, root_node, &block
-          end
-        else
-          block.call node, level
-          node.children.where(options[:where]).each do |child|
-            walk_tree options, level + 1, child, &block
-          end
+    # There is also a walk_tree instance method that starts walking from
+    # the node it is called on.
+    #
+    def walk_tree(options = {}, &block)
+      algorithm = options.fetch :algorithm, :dfs
+      where = options.fetch :where, {}
+      send("walk_tree_#{algorithm}", where, &block)
+    end
+
+    def self.extended(mod)
+      mod.class_eval do
+        def walk_tree(options = {}, &block)
+          algorithm = options.fetch :algorithm, :dfs
+          where = options.fetch :where, {}
+          self.class.send("walk_tree_#{algorithm}", where, self, &block)
         end
       end
     end
+
+    private
+
+    def walk_tree_bfs(where = {}, node = nil, level = -1, &block)
+      nodes = (node.nil? ? roots : node.children).where(where)
+      nodes.each { |child| block.call child, level + 1 }
+      nodes.each { |child| walk_tree_bfs where, child, level + 1, &block }
+    end
+
+    def walk_tree_dfs(where = {}, node = nil, level = -1, &block)
+      block.call node, level unless level == -1
+      nodes = (node.nil? ? roots : node.children).where(where)
+      nodes.each { |child| walk_tree_dfs where, child, level + 1, &block }
+    end
+
   end
 
   module InstanceMethods
