@@ -66,7 +66,8 @@ module ActsAsTree
         foreign_key:   "parent_id",
         order:         nil,
         counter_cache: nil,
-        dependent:     :destroy
+        dependent:     :destroy,
+        touch:         false
       }
 
       configuration.update(options) if options.is_a?(Hash)
@@ -78,6 +79,7 @@ module ActsAsTree
       belongs_to :parent, class_name:    name,
         foreign_key:   configuration[:foreign_key],
         counter_cache: configuration[:counter_cache],
+        touch:         configuration[:touch],
         inverse_of:    :children
 
       if ActiveRecord::VERSION::MAJOR >= 4

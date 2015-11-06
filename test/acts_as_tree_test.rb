@@ -56,6 +56,7 @@ def setup_db(counter_cache = false)
         t.column :type, :string
         t.column :parent_id, :integer
         t.column(:children_count, :integer, default: 0) if counter_cache
+        t.timestamps null: false
       end
     end
 
@@ -92,6 +93,10 @@ end
 class RecursivelyCascadedTreeMixin < Mixin
   acts_as_tree foreign_key: "parent_id"
   has_one :first_child, class_name: 'RecursivelyCascadedTreeMixin', foreign_key: :parent_id
+end
+
+class TreeMixinWithTouch < Mixin
+   acts_as_tree foreign_key: "parent_id", order: "id", touch: true
 end
 
 class TreeTest < MiniTest::Unit::TestCase
@@ -505,5 +510,28 @@ class TreeTestWithCounterCache < MiniTest::Unit::TestCase
   def test_counter_cache_being_used
     assert_no_queries { @root.leaf? }
     assert_no_queries { @child2.leaf? }
+  end
+end
+
+
+class TreeTestWithTouch < MiniTest::Unit::TestCase
+  def setup
+    teardown_db
+    setup_db
+
+    @root  = TreeMixinWithTouch.create!
+    @child = TreeMixinWithTouch.create! parent_id: @root.id
+  end
+
+  def teardown
+    teardown_db
+  end
+
+  def test_updated_at
+    previous_root_updated_at = @root.updated_at
+    @child.update_attributes(:type => "new_type")
+    @root.reload
+    
+    assert @root.updated_at != previous_root_updated_at
   end
 end
