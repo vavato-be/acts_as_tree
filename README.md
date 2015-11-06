@@ -74,6 +74,9 @@ We no longer support Ruby 1.8 or versions of Rails/ActiveRecord older than 3.0. 
 Moving forward we will do our best to support the latest versions of ActiveRecord and Ruby.
 
 ## Change Log
+* 2.3.0 - November 6, 2015
+	* Added touch option to acts\_as\_tree relation. See #40 -- mbenitezm
+	* Fix tests on rails 3.x with ruby 1.9.2. See #41 -- felixbuenemann
 * 2.2.0 - June 15, 2015
 	* Added TreeWalker.walk\_tree instance method. See #32, #37, #38 -- felixbuenemann, genewoo
 	* Fix tests on rails 3.x. See #36 -- marshall-lee
