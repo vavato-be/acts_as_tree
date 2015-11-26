@@ -210,12 +210,12 @@ module ActsAsTree
 
     def walk_tree_bfs(where = {}, node = nil, level = -1, &block)
       nodes = (node.nil? ? roots : node.children).where(where)
-      nodes.each { |child| block.call child, level + 1 }
+      nodes.each { |child| yield(child, level + 1) }
       nodes.each { |child| walk_tree_bfs where, child, level + 1, &block }
     end
 
     def walk_tree_dfs(where = {}, node = nil, level = -1, &block)
-      block.call node, level unless level == -1
+      yield(node, level) unless level == -1
       nodes = (node.nil? ? roots : node.children).where(where)
       nodes.each { |child| walk_tree_dfs where, child, level + 1, &block }
     end
