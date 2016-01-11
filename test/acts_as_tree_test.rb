@@ -3,7 +3,7 @@ require 'minitest/benchmark'
 require 'active_record'
 require 'acts_as_tree'
 
-class MiniTest::Unit::TestCase
+class ActsAsTreeTestCase < (defined?(MiniTest::Test) ? MiniTest::Test : MiniTest::Unit::TestCase)
   def assert_queries(num = 1, &block)
     query_count, result = count_queries(&block)
     result
@@ -65,8 +65,11 @@ def setup_db(counter_cache = false)
 end
 
 def teardown_db
-  ActiveRecord::Base.connection.tables.each do |table|
-    ActiveRecord::Base.connection.drop_table(table)
+  # Silence tables deprecation on rails 5.0
+  ActiveSupport::Deprecation.silence do
+    ActiveRecord::Base.connection.tables.each do |table|
+      ActiveRecord::Base.connection.drop_table(table)
+    end
   end
 end
 
@@ -99,7 +102,7 @@ class TreeMixinWithTouch < Mixin
    acts_as_tree foreign_key: "parent_id", order: "id", touch: true
 end
 
-class TreeTest < MiniTest::Unit::TestCase
+class TreeTest < ActsAsTreeTestCase
 
   def setup
     setup_db
@@ -322,7 +325,7 @@ class TreeTest < MiniTest::Unit::TestCase
   end
 end
 
-class TestDeepDescendantsPerformance < MiniTest::Unit::TestCase
+class TestDeepDescendantsPerformance < ActsAsTreeTestCase
   def setup
     teardown_db
     setup_db
@@ -372,7 +375,7 @@ class TestDeepDescendantsPerformance < MiniTest::Unit::TestCase
   end
 end
 
-class TreeTestWithEagerLoading < MiniTest::Unit::TestCase
+class TreeTestWithEagerLoading < ActsAsTreeTestCase
 
   def setup
     teardown_db
@@ -433,7 +436,7 @@ class TreeTestWithEagerLoading < MiniTest::Unit::TestCase
   end
 end
 
-class TreeTestWithoutOrder < MiniTest::Unit::TestCase
+class TreeTestWithoutOrder < ActsAsTreeTestCase
 
   def setup
     setup_db
@@ -454,7 +457,7 @@ class TreeTestWithoutOrder < MiniTest::Unit::TestCase
   end
 end
 
-class UnsavedTreeTest < MiniTest::Unit::TestCase
+class UnsavedTreeTest < ActsAsTreeTestCase
   def setup
     setup_db
     @root       = TreeMixin.new
@@ -472,7 +475,7 @@ class UnsavedTreeTest < MiniTest::Unit::TestCase
 end
 
 
-class TreeTestWithCounterCache < MiniTest::Unit::TestCase
+class TreeTestWithCounterCache < ActsAsTreeTestCase
   def setup
     teardown_db
     setup_db(true)
@@ -514,7 +517,7 @@ class TreeTestWithCounterCache < MiniTest::Unit::TestCase
 end
 
 
-class TreeTestWithTouch < MiniTest::Unit::TestCase
+class TreeTestWithTouch < ActsAsTreeTestCase
   def setup
     teardown_db
     setup_db
