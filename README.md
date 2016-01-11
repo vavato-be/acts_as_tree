@@ -74,6 +74,8 @@ We no longer support Ruby 1.8 or versions of Rails/ActiveRecord older than 3.0. 
 Moving forward we will do our best to support the latest versions of ActiveRecord and Ruby.
 
 ## Change Log
+* 2.4.0 - January 12, 2016
+	* Added support for rails 5.0, see #46 -- klacointe
 * 2.3.0 - November 6, 2015
 	* Added touch option to acts\_as\_tree relation. See #40 -- mbenitezm
 	* Fix tests on rails 3.x with ruby 1.9.2. See #41 -- felixbuenemann
