@@ -76,11 +76,17 @@ module ActsAsTree
         configuration[:counter_cache] = :children_count
       end
 
-      belongs_to :parent, class_name:    name,
+      belongs_to_opts = {
+        class_name:    name,
         foreign_key:   configuration[:foreign_key],
         counter_cache: configuration[:counter_cache],
         touch:         configuration[:touch],
         inverse_of:    :children
+      }
+
+      belongs_to_opts[:optional] = true if ActiveRecord::VERSION::MAJOR >= 5
+
+      belongs_to :parent, belongs_to_opts
 
       if ActiveRecord::VERSION::MAJOR >= 4
         has_many :children, lambda { order configuration[:order] },
