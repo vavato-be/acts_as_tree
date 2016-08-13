@@ -47,17 +47,17 @@ end
 
 ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
 
-def setup_db(counter_cache = false, external_ids = false)
+def setup_db(options = {})
   # AR keeps printing annoying schema statements
   capture_stdout do
     ActiveRecord::Base.logger
     ActiveRecord::Schema.define(version: 1) do
-      create_table :mixins do |t|
+      create_table :mixins, force: true do |t|
         t.column :type, :string
         t.column :parent_id, :integer
-        t.column :external_id, :integer if external_ids
-        t.column :external_parent_id, :integer if external_ids
-        t.column(:children_count, :integer, default: 0) if counter_cache
+        t.column :external_id, :integer if options[:external_ids]
+        t.column :external_parent_id, :integer if options[:external_ids]
+        t.column :children_count, :integer, default: 0 if options[:counter_cache]
         t.timestamps null: false
       end
     end
@@ -68,15 +68,6 @@ def setup_db(counter_cache = false, external_ids = false)
       ActiveRecord::Base.connection.schema_cache.clear!
     end
     Mixin.reset_column_information
-  end
-end
-
-def teardown_db
-  # Silence tables deprecation on rails 5.0
-  ActiveSupport::Deprecation.silence do
-    ActiveRecord::Base.connection.tables.each do |table|
-      ActiveRecord::Base.connection.drop_table(table)
-    end
   end
 end
 
@@ -130,10 +121,6 @@ class TreeTest < ActsAsTreeTestCase
     @root_child2        = @tree_mixin.create! parent_id: @root1.id
     @root2              = @tree_mixin.create!
     @root3              = @tree_mixin.create!
-  end
-
-  def teardown
-    teardown_db
   end
 
   def test_children
@@ -343,7 +330,6 @@ end
 
 class TestDeepDescendantsPerformance < ActsAsTreeTestCase
   def setup
-    teardown_db
     setup_db
     @root1 = TreeMixin.create!
     create_cascade_children @root1, "root1", 10
@@ -359,10 +345,6 @@ class TestDeepDescendantsPerformance < ActsAsTreeTestCase
 
     @root5        = TreeMixin.create!
     create_cascade_children @root5, "root5", 50
-  end
-
-  def teardown
-    teardown_db
   end
 
   def self.bench_range
@@ -394,7 +376,6 @@ end
 class TreeTestWithEagerLoading < ActsAsTreeTestCase
 
   def setup
-    teardown_db
     setup_db
     @root1        = TreeMixin.create!
     @root_child1  = TreeMixin.create! parent_id: @root1.id
@@ -407,10 +388,6 @@ class TreeTestWithEagerLoading < ActsAsTreeTestCase
     @rc2 = RecursivelyCascadedTreeMixin.create! parent_id: @rc1.id
     @rc3 = RecursivelyCascadedTreeMixin.create! parent_id: @rc2.id
     @rc4 = RecursivelyCascadedTreeMixin.create! parent_id: @rc3.id
-  end
-
-  def teardown
-    teardown_db
   end
 
   def test_eager_association_loading
@@ -460,10 +437,6 @@ class TreeTestWithoutOrder < ActsAsTreeTestCase
     @root2 = TreeMixinWithoutOrder.create!
   end
 
-  def teardown
-    teardown_db
-  end
-
   def test_root
     assert [@root1, @root2].include? TreeMixinWithoutOrder.root
   end
@@ -480,10 +453,6 @@ class UnsavedTreeTest < ActsAsTreeTestCase
     @root_child = @root.children.build
   end
 
-  def teardown
-    teardown_db
-  end
-
   def test_inverse_of
     # We want children to be aware of their parent before saving either
     assert_equal @root, @root_child.parent
@@ -493,8 +462,7 @@ end
 
 class TreeTestWithCounterCache < ActsAsTreeTestCase
   def setup
-    teardown_db
-    setup_db(true)
+    setup_db counter_cache: true
 
     @root          = TreeMixinWithCounterCache.create!
     @child1        = TreeMixinWithCounterCache.create! parent_id: @root.id
@@ -502,10 +470,6 @@ class TreeTestWithCounterCache < ActsAsTreeTestCase
     @child2        = TreeMixinWithCounterCache.create! parent_id: @root.id
 
     [@root, @child1, @child1_child1, @child2].map(&:reload)
-  end
-
-  def teardown
-    teardown_db
   end
 
   def test_counter_cache
@@ -535,30 +499,24 @@ end
 
 class TreeTestWithTouch < ActsAsTreeTestCase
   def setup
-    teardown_db
     setup_db
 
     @root  = TreeMixinWithTouch.create!
     @child = TreeMixinWithTouch.create! parent_id: @root.id
   end
 
-  def teardown
-    teardown_db
-  end
-
   def test_updated_at
     previous_root_updated_at = @root.updated_at
     @child.update_attributes(:type => "new_type")
     @root.reload
-    
+
     assert @root.updated_at != previous_root_updated_at
   end
 end
 
 class ExternalTreeTest < TreeTest
   def setup
-    teardown_db
-    setup_db false, true
+    setup_db external_ids: true
     @tree_mixin = ExternalTreeMixin
 
     @root1              = @tree_mixin.create! external_id: 1101
