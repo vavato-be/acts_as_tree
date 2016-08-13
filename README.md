@@ -74,6 +74,8 @@ We no longer support Ruby 1.8 or versions of Rails/ActiveRecord older than 3.0. 
 Moving forward we will do our best to support the latest versions of ActiveRecord and Ruby.
 
 ## Change Log
+* 2.5.0 - August 14, 2016
+	* Allow for use of a different primary key, see #50 -- Two9A
 * 2.4.0 - January 12, 2016
 	* Added support for rails 5.0, see #46 -- klacointe
 * 2.3.0 - November 6, 2015
