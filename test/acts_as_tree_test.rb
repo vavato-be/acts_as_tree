@@ -62,6 +62,11 @@ def setup_db(counter_cache = false, external_ids = false)
       end
     end
 
+    # Fix broken reset_column_information in some activerecord versions.
+    if ActiveRecord::VERSION::MAJOR == 3 && ActiveRecord::VERSION::MINOR == 2 ||
+       ActiveRecord::VERSION::MAJOR == 4 && ActiveRecord::VERSION::MINOR == 1
+      ActiveRecord::Base.connection.schema_cache.clear!
+    end
     Mixin.reset_column_information
   end
 end
