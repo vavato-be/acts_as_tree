@@ -65,7 +65,7 @@ module ActsAsTree
     #                            a custom column by passing a symbol or string.
     def acts_as_tree(options = {})
       configuration = {
-        primary_key:   primary_key,
+        primary_key:   "id",
         foreign_key:   "parent_id",
         order:         nil,
         counter_cache: nil,
