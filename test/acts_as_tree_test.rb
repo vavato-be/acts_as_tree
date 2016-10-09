@@ -496,7 +496,6 @@ class TreeTestWithCounterCache < ActsAsTreeTestCase
   end
 end
 
-
 class TreeTestWithTouch < ActsAsTreeTestCase
   def setup
     setup_db
@@ -541,3 +540,57 @@ class ExternalTreeTest < TreeTest
     assert_nil root4_child.reload.external_parent_id
   end
 end
+
+class GenertaionMethods < ActsAsTreeTestCase
+  def setup
+    setup_db
+
+    @root1              = TreeMixin.create!
+    @root_child1        = TreeMixin.create! parent_id: @root1.id
+    @child1_child       = TreeMixin.create! parent_id: @root_child1.id
+    @child1_child_child = TreeMixin.create! parent_id: @child1_child.id
+    @root_child2        = TreeMixin.create! parent_id: @root1.id
+    @root2              = TreeMixin.create!
+    @root2_child1       = TreeMixin.create! parent_id: @root2.id
+    @root2_child2       = TreeMixin.create! parent_id: @root2.id
+    @root2_child1_child = TreeMixin.create! parent_id: @root2_child1.id
+    @root3              = TreeMixin.create!
+  end
+
+  def test_generations
+    assert_equal(
+      {
+        0 => [@root1, @root2, @root3],
+        1 => [@root_child1, @root_child2, @root2_child1, @root2_child2],
+        2 => [@child1_child, @root2_child1_child],
+        3 => [@child1_child_child]
+      },
+      TreeMixin.generations
+    )
+  end
+
+  def test_generation
+    assert_equal [@root2, @root3], @root1.generation
+    assert_equal [@root_child2, @root2_child1, @root2_child2],
+      @root_child1.generation
+    assert_equal [@root2_child1_child], @child1_child.generation
+    assert_equal [], @child1_child_child.generation
+  end
+
+  def test_self_and_generation
+    assert_equal [@root1, @root2, @root3], @root1.self_and_generation
+    assert_equal [@root_child1, @root_child2, @root2_child1, @root2_child2],
+      @root_child1.self_and_generation
+    assert_equal [@child1_child, @root2_child1_child],
+      @child1_child.self_and_generation
+    assert_equal [@child1_child_child], @child1_child_child.self_and_generation
+  end
+
+  def test_level
+    assert_equal 0, @root1.level
+    assert_equal 1, @root_child1.level
+    assert_equal 2, @child1_child.level
+    assert_equal 3, @child1_child_child.level
+  end
+end
+
