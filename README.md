@@ -74,6 +74,9 @@ We no longer support Ruby 1.8 or versions of Rails/ActiveRecord older than 3.0. 
 Moving forward we will do our best to support the latest versions of ActiveRecord and Ruby.
 
 ## Change Log
+* 2.6.1 - January 18, 2017
+	* Avoid conflicts of `#level` method with existing column, see #57, #58, #60 -- markhgbrewster
+	* Fix tests on rails 4.2 with ruby < 2.1 -- felixbuenemann
 * 2.6.0 - October 9, 2016
 	* Add generations methods, see #56 -- markhgbrewster
 * 2.5.1 - September 8, 2016
@@ -146,7 +149,7 @@ Moving forward we will do our best to support the latest versions of ActiveRecor
    people know that 1101.1.1 has breaking differences from 1100.0. If you're
    adding new features, but not changing existing functionality bump the minor
    version, if you're shipping a bugfix, just bump the patch.
-2. Following the above rules, change the version found in lib/acts_as_tree/version.rb.
+2. Following the above rules, change the version found in lib/acts\_as\_tree/version.rb.
 3. Make sure the Change log in the README includes a brief summary of the versions
    changes, with credit to the contributors.
 4. Commit these changes in one "release-prep" commit (on the master branch).
