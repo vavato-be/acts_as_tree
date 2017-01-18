@@ -60,6 +60,12 @@ def setup_db(options = {})
         t.column :children_count, :integer, default: 0 if options[:counter_cache]
         t.timestamps null: false
       end
+
+      create_table :level_mixins, force: true do |t|
+        t.column :level, :string
+        t.column :parent_id, :integer
+        t.timestamps null: false
+      end
     end
 
     # Fix broken reset_column_information in some activerecord versions.
@@ -75,8 +81,21 @@ class Mixin < ActiveRecord::Base
   include ActsAsTree
 end
 
+class LevelMixin < ActiveRecord::Base
+  include ActsAsTree
+  acts_as_tree foreign_key: "parent_id", order: "id"
+end
+
 class TreeMixin < Mixin
   acts_as_tree foreign_key: "parent_id", order: "id"
+end
+
+class TreeMixinWithLevelMethod < Mixin
+  acts_as_tree foreign_key: "parent_id", order: "id"
+
+  def level
+    'Has Level Method'
+  end
 end
 
 class TreeMixinWithoutOrder < Mixin
@@ -541,7 +560,7 @@ class ExternalTreeTest < TreeTest
   end
 end
 
-class GenertaionMethods < ActsAsTreeTestCase
+class GenerationMethods < ActsAsTreeTestCase
   def setup
     setup_db
 
@@ -555,6 +574,8 @@ class GenertaionMethods < ActsAsTreeTestCase
     @root2_child2       = TreeMixin.create! parent_id: @root2.id
     @root2_child1_child = TreeMixin.create! parent_id: @root2_child1.id
     @root3              = TreeMixin.create!
+    @level_column       = LevelMixin.create! level: 'Has Level Column'
+    @level_method       = TreeMixinWithLevelMethod.create!
   end
 
   def test_generations
@@ -586,11 +607,23 @@ class GenertaionMethods < ActsAsTreeTestCase
     assert_equal [@child1_child_child], @child1_child_child.self_and_generation
   end
 
+  def test_tree_level
+    assert_equal 0, @root1.tree_level
+    assert_equal 1, @root_child1.tree_level
+    assert_equal 2, @child1_child.tree_level
+    assert_equal 3, @child1_child_child.tree_level
+  end
+
   def test_level
     assert_equal 0, @root1.level
     assert_equal 1, @root_child1.level
     assert_equal 2, @child1_child.level
     assert_equal 3, @child1_child_child.level
+  end
+
+  def test_alias_tree_level
+    assert_equal 'Has Level Method', @level_method.level
+    assert_equal 'Has Level Column', @level_column.level
   end
 end
 
