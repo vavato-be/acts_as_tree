@@ -74,6 +74,8 @@ We no longer support Ruby 1.8 or versions of Rails/ActiveRecord older than 3.0. 
 Moving forward we will do our best to support the latest versions of ActiveRecord and Ruby.
 
 ## Change Log
+* 2.7.0 - September 15, 2017
+	* Added support for rails 5.1, see #67, #68 -- felixbuenemann, marcinwierzbicki
 * 2.6.1 - January 18, 2017
 	* Avoid conflicts of `#level` method with existing column, see #57, #58, #60 -- markhgbrewster
 	* Fix tests on rails 4.2 with ruby < 2.1 -- felixbuenemann
