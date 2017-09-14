@@ -355,12 +355,23 @@ module ActsAsTree
 
     private
 
-    def update_parents_counter_cache
-      counter_cache_column = self.class.children_counter_cache_column
+    if ActiveRecord::VERSION::MAJOR > 5 || ActiveRecord::VERSION::MAJOR == 5 && ActiveRecord::VERSION::MINOR >= 1
+      def update_parents_counter_cache
+        counter_cache_column = self.class.children_counter_cache_column
 
-      if parent_id_changed?
-        self.class.decrement_counter(counter_cache_column, parent_id_was)
-        self.class.increment_counter(counter_cache_column, parent_id)
+        if saved_change_to_parent_id?
+          self.class.decrement_counter(counter_cache_column, parent_id_before_last_save)
+          self.class.increment_counter(counter_cache_column, parent_id)
+        end
+      end
+    else
+      def update_parents_counter_cache
+        counter_cache_column = self.class.children_counter_cache_column
+
+        if parent_id_changed?
+          self.class.decrement_counter(counter_cache_column, parent_id_was)
+          self.class.increment_counter(counter_cache_column, parent_id)
+        end
       end
     end
   end
