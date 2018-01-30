@@ -112,7 +112,7 @@ module ActsAsTree
         include ActsAsTree::InstanceMethods
 
         def self.default_tree_order
-          order_option = %Q{#{configuration.fetch :order, "nil"}}
+          order_option = #{configuration[:order].inspect}
           order(order_option)
         end
 
