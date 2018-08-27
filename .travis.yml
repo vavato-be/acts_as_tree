@@ -21,6 +21,7 @@ gemfile:
   - gemfiles/rails-4.2.gemfile
   - gemfiles/rails-5.0.gemfile
   - gemfiles/rails-5.1.gemfile
+  - gemfiles/rails-5.2.gemfile
 
 matrix:
   exclude:
@@ -62,3 +63,12 @@ matrix:
       gemfile: gemfiles/rails-5.1.gemfile
     - rvm: 2.1.8
       gemfile: gemfiles/rails-5.1.gemfile
+    # rails 5.2 requires ruby 2.2.2+
+    - rvm: 1.9.2
+      gemfile: gemfiles/rails-5.2.gemfile
+    - rvm: 1.9.3
+      gemfile: gemfiles/rails-5.2.gemfile
+    - rvm: 2.0.0
+      gemfile: gemfiles/rails-5.2.gemfile
+    - rvm: 2.1.8
+      gemfile: gemfiles/rails-5.2.gemfile

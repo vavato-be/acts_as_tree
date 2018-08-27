@@ -355,7 +355,10 @@ module ActsAsTree
 
     private
 
-    if ActiveRecord::VERSION::MAJOR > 5 || ActiveRecord::VERSION::MAJOR == 5 && ActiveRecord::VERSION::MINOR >= 1
+    if ActiveRecord::VERSION::MAJOR > 5 || ActiveRecord::VERSION::MAJOR == 5 && ActiveRecord::VERSION::MINOR >= 2
+      def update_parents_counter_cache
+      end
+    elsif ActiveRecord::VERSION::MAJOR == 5 && ActiveRecord::VERSION::MINOR == 1
       def update_parents_counter_cache
         counter_cache_column = self.class.children_counter_cache_column
 
