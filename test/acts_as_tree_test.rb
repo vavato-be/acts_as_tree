@@ -51,7 +51,7 @@ def setup_db(options = {})
   # AR keeps printing annoying schema statements
   capture_stdout do
     ActiveRecord::Base.logger
-    ActiveRecord::Schema.define(version: 1) do
+    ActiveRecord::Schema.define do
       create_table :mixins, force: true do |t|
         t.column :type, :string
         t.column :parent_id, :integer
