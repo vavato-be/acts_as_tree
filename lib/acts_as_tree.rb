@@ -108,22 +108,19 @@ module ActsAsTree
           inverse_of:  :parent
       end
 
-      class_eval <<-EOV
-        include ActsAsTree::InstanceMethods
+      include ActsAsTree::InstanceMethods
 
-        def self.default_tree_order
-          order_option = #{configuration[:order].inspect}
-          order(order_option)
-        end
+      define_singleton_method :default_tree_order do
+        order(configuration[:order])
+      end
 
-        def self.root
-          self.roots.first
-        end
+      define_singleton_method :root do
+        self.roots.first
+      end
 
-        def self.roots
-          where(:#{configuration[:foreign_key]} => nil).default_tree_order
-        end
-      EOV
+      define_singleton_method :roots do
+        where(configuration[:foreign_key] => nil).default_tree_order
+      end
 
       # Returns a hash of all nodes grouped by their level in the tree structure.
       #
