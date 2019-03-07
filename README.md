@@ -74,6 +74,9 @@ We no longer support Ruby 1.8 or versions of Rails/ActiveRecord older than 3.0. 
 Moving forward we will do our best to support the latest versions of ActiveRecord and Ruby.
 
 ## Change Log
+* 2.9.0 - March 7, 2019
+	* Allow arel nodes in the `:order` option, see #78, #79 -- felixbuenemann, vladvinnikov
+	* Added support for rails 6.0, see #81 -- felixbuenemann
 * 2.8.0 - August 27, 2018
 	* Added support for rails 5.2, see #76, #77 -- felixbuenemann
 * 2.7.1 - January 30, 2018
