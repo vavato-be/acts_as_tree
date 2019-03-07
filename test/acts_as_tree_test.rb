@@ -4,6 +4,8 @@ require 'active_record'
 require 'acts_as_tree'
 
 class ActsAsTreeTestCase < (defined?(MiniTest::Test) ? MiniTest::Test : MiniTest::Unit::TestCase)
+  UPDATE_METHOD = ActiveRecord::VERSION::MAJOR >= 4 ? :update : :update_attributes
+
   def assert_queries(num = 1, &block)
     query_count, result = count_queries(&block)
     result
@@ -497,7 +499,7 @@ class TreeTestWithCounterCache < ActsAsTreeTestCase
   end
 
   def test_update_parents_counter_cache
-    @child1_child1.update_attributes(:parent_id => @root.id)
+    @child1_child1.public_send(UPDATE_METHOD, :parent_id => @root.id)
     assert_equal 3, @root.reload.children_count
     assert_equal 0, @child1.reload.children_count
   end
@@ -525,7 +527,7 @@ class TreeTestWithTouch < ActsAsTreeTestCase
 
   def test_updated_at
     previous_root_updated_at = @root.updated_at
-    @child.update_attributes(:type => "new_type")
+    @child.public_send(UPDATE_METHOD, :type => "new_type")
     @root.reload
 
     assert @root.updated_at != previous_root_updated_at
