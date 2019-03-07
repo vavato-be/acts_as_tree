@@ -74,68 +74,8 @@ We no longer support Ruby 1.8 or versions of Rails/ActiveRecord older than 3.0. 
 Moving forward we will do our best to support the latest versions of ActiveRecord and Ruby.
 
 ## Change Log
-* 2.9.0 - March 7, 2019
-	* Allow arel nodes in the `:order` option, see #78, #79 -- felixbuenemann, vladvinnikov
-	* Added support for rails 6.0, see #81 -- felixbuenemann
-* 2.8.0 - August 27, 2018
-	* Added support for rails 5.2, see #76, #77 -- felixbuenemann
-* 2.7.1 - January 30, 2018
-	* Fix column quoting if the `:order` option is a symbol, see #73, #74 -- felixbuenemann
-* 2.7.0 - September 15, 2017
-	* Added support for rails 5.1, see #67, #68 -- felixbuenemann, marcinwierzbicki
-* 2.6.1 - January 18, 2017
-	* Avoid conflicts of `#level` method with existing column, see #57, #58, #60 -- markhgbrewster
-	* Fix tests on rails 4.2 with ruby < 2.1 -- felixbuenemann
-* 2.6.0 - October 9, 2016
-	* Add generations methods, see #56 -- markhgbrewster
-* 2.5.1 - September 8, 2016
-	* Fix early database connection in acts\_as\_tree, see #55 -- felixbuenemann
-* 2.5.0 - August 14, 2016
-	* Allow for use of a different primary key, see #50 -- Two9A
-* 2.4.0 - January 12, 2016
-	* Added support for rails 5.0, see #46 -- klacointe
-* 2.3.0 - November 6, 2015
-	* Added touch option to acts\_as\_tree relation. See #40 -- mbenitezm
-	* Fix tests on rails 3.x with ruby 1.9.2. See #41 -- felixbuenemann
-* 2.2.0 - June 15, 2015
-	* Added TreeWalker.walk\_tree instance method. See #32, #37, #38 -- felixbuenemann, genewoo
-	* Fix tests on rails 3.x. See #36 -- marshall-lee
-* 2.1.0 - September 25, 2014
-	* Added TreeWalker. See #30 -- 545ch4
-* 2.0.0 - July 3, 2014
-	* Renamed Presentation module to TreeView, see #27, #28 -- felixbuenemann
-* 1.6.1 - May 29, 2014
-	* Readme Improvements, see #26 -- schlick
-	* Improvements and Fixes for counter cache (fix counter\_cache: true). See #24, #25 -- dv
-	* Cleanup and fix tests, see #24.
-* 1.6.0 - April 21, 2014
-	* Added new `leaves` method. See #23 -- MichalPokorny
-* 1.5.1 - March 28, 2014
-	* Fixing descendants modification bug. See #20 -- amerine, tmuerell
-* 1.5.0 - December 16, 2013
-	* Added new `descendants` method -- adamkleingit
-	* Fixed warning message -- akicho8
-* 1.4.0 - June 25, 2013
-	* `Presentation#tree_view` -- rainchen
-	* `root?` && `leaf?` methods. -- xuanxu
-* 1.3.0 - March 29, 2013
-	* Rails 4.0 Support! -- mischa78
-	* Readme Fixes -- mischa78 & seanhussey
-* 1.2.0 - October 29, 2012
-	* Adding new `self_with_ancestors` accessor -- felixbuenemann
-	* `roots` is now a scope.
-* 1.1.0 - April 24, 2012
-	* Deprecate the ActiveRecord::Acts::Tree module in favor of ActsAsTree
-* 1.0.1 - April 18, 2012
-	* Include the Railtie for easier loading in Rails. Will reassess the forced module inclusion in the future.
-* 1.0.0 - April 14, 2012
-	* Official 1.0 release. Force users to include the ActiveRecord::Acts::Tree module.
-* 0.2.0 - April 9, 2012
-	* Rails 3 Support
-* 0.1.1 - February 3, 2010
-	* Bug Fixes
-* 0.1.0 - October 9, 2009
-	* First Gem Release
+
+The Change Log has moved to the [releases](https://github.com/amerine/acts_as_tree/releases) page.
 
 ## Note on Patches/Pull Requests
 
@@ -159,13 +99,14 @@ Moving forward we will do our best to support the latest versions of ActiveRecor
    adding new features, but not changing existing functionality bump the minor
    version, if you're shipping a bugfix, just bump the patch.
 2. Following the above rules, change the version found in lib/acts\_as\_tree/version.rb.
-3. Make sure the Change log in the README includes a brief summary of the versions
-   changes, with credit to the contributors.
-4. Commit these changes in one "release-prep" commit (on the master branch).
-5. Push that commit up to the repo.
-6. Run `rake release`
-   This will create and push a tag to Github, then generate a gem and push it to
+3. Commit these changes in one "release-prep" commit (on the master branch).
+4. Push that commit up to the repo.
+5. Run `rake release`
+   This will create and push a tag to GitHub, then generate a gem and push it to
    Rubygems.
+6. Create a new release from the tag on GitHub, by choosing "Draft a new release" button
+   on the [releases](https://github.com/amerine/acts_as_tree/releases) tab and include
+   the relevant changes in the description.
 7. Profit.
 
 ## License (MIT)
