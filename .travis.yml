@@ -28,8 +28,8 @@ matrix:
     - rvm: 2.2.10
       gemfile: gemfiles/rails-5.2.gemfile
     # rails 6.x requires ruby >= 2.5.0
-    - rvm: 2.5.3
+    - rvm: 2.5.6
       gemfile: gemfiles/rails-6.0.gemfile
     # test latest rails and ruby
-    - rvm: 2.6.1
+    - rvm: 2.6.4
       gemfile: gemfiles/rails-6.0.gemfile
